@@ -1,0 +1,101 @@
+/* ################################################################## */
+/* ####################### BASIC DECLARATIONS ####################### */
+/* ################################################################## */
+
+@import 'fancyBlockquotes.css';
+@import 'sidebars.css';
+
+:root {
+  /* Dunkles Thema */
+  --body-color_primary:               #d7d7d7;
+  --body-backgroundColor_primary:     #181818;
+  --navi-color_primary:               #3e290f;
+  --navi-color-hover_primary:         #633f1e;
+  
+  /* Helles Thema */
+  --body-color_secondary:             #181818;
+  --body-backgroundColor_secondary:   #d7d7d7;
+  --navi-color_secondary:             #3e290f;
+  --navi-color-hover_secondary:       #633f1e;
+  
+  /* Globale Schriftstile */
+  --body-fontFamily-headlines:        "Comic Sans MS", Arial, sans-serif;
+  --body-fontFamily-text:             "Comic Sans MS", Arial, sans-serif;
+  --navi-fontFamily:                  "Tahoma", Monospaced, sans-serif;
+  
+  /* Globale Basisschriftgröße ( = 1rem ) */
+  --base-fontSize:                    1rem;
+  
+  /* Beschriftung der Buttons im Navigationsbereichen */
+  --sidebar-fontSize:                 2vw;
+  --navbar-fontSize:                  1vw;
+  
+  /* Default Z-Index für generische Elemente */
+  --body-zIndex:                      10;
+  
+  /* Default Z-Index für den Header-Bereich */
+  --header-zIndex:                    20;
+  
+  /* Default Z-Index für Navigationsbereiche */
+  --navi_zIndex:                      30;
+  
+  /* vertikaler Abstand zwischen Content-Bereich und Header/Footer  */
+  --content-marginY:                  10%;
+  
+  /* Innenabstand im Content-Bereich */
+  --content-padding:                  2% 2% 2% 2%;
+}
+
+
+
+/* ################################################################## */
+/* ########################## STYLE RULES ########################### */
+/* ################################################################## */
+
+/* Define a counter style for custom list markers */
+@counter-style filled-circled-decimal {
+  /* '❶' '❷' '❸' '❹' '❺' '❻' '❼' '❽' '❾' '❿' '⓫' '⓬' '⓭' '⓮' '⓯' '⓰' '⓱' '⓲' '⓳' '⓴' */
+  symbols: '\2776' '\2777' '\2778' '\2779' '\277a' '\277b' '\277c' '\277d' '\277e' '\277f' '\24EB' '\24EC' '\24ED' '\24EE' '\24EF' '\24F0' '\24F1' '\24F2' '\24F3' '\24F4';
+  system: fixed;
+  suffix: ' ';
+}
+
+
+s {
+  opacity: 0.5;
+}
+
+
+/* Elemente von Listen */
+.list-group {
+  list-style-position: inside;
+  padding-left: 2%;
+  list-style-type: filled-circled-decimal;
+}
+
+/* Alter markers of sub lists */ 
+.list-group * .list-group {
+  list-style-type: disc;
+}
+
+/* Alter markers of sub sub lists */ 
+.list-group * .list-group * .list-group {
+  list-style-type: square;
+}
+
+/* ################################################################## */
+/* ####################### RESPONSIVE QUERIES ####################### */
+/* ################################################################## */
+
+/* Wechsel zu Querformat */
+@media (orientation: landscape) {
+  .landscape-only   { display: block; }
+  .portrait-only    { display: none; }
+}
+
+
+/* Wechsel zu Hochformat */
+@media (orientation: portrait) {
+  .landscape-only   { display: none; }
+  .portrait-only    { display: block; }
+}
