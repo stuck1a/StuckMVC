@@ -1,0 +1,19 @@
+{
+  "name":                "stuck1a/stuckmvc",
+  "description":         "Lightweight MVC framework",
+  "minimum-stability":   "stable",
+  "license":             "proprietary",
+  
+  "authors": [
+    {
+      "name":  "stuck1a",
+      "email": "dev@stuck1a.de",
+    }
+  ],
+  
+  "require": {
+    "php": ">=7.1",
+    "smarty/smarty": "^3.1.40"
+  }
+  
+}
