@@ -2,7 +2,7 @@
 
 <strong>Lightweight PSR compilant MVC framwork.
 Fully extendable.
-Uses Smarty for the view part as only 3rd party package</strong>
+Uses Smarty as template engine (only 3rd party package)</strong>
 
 <i>Focuses on beginners, allowing to build professional websites without being dependant from
 expensive providers like WP, Joomla, ... - but will also have a lot to offer for professional developers as well.</i>
