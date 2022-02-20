@@ -31,3 +31,7 @@ Since the core features are mostly done, it MIGHT be used to build webapplicatio
 but it's highly recommend to wait until official release of v1.0!
 
 <strong>//Edit: Due to the whole rebuild of the model system (mixin of active record pattern), absolutely don't use the current build !!!</strong>
+
+
+Planned release of v1.0 -> June/July 2022
+Be prepared :)
