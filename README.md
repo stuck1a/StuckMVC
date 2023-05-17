@@ -2,36 +2,34 @@
 
 <strong>Lightweight PSR compilant MVC framwork.
 Fully extendable.
-Uses Smarty as template engine (only 3rd party package)</strong>
+Uses Smarty as template engine</strong>
 
-<i>Focuses on beginners, allowing to build professional websites without being dependant from
-expensive providers like WP, Joomla, ... - but will also have a lot to offer for professional developers as well.</i>
+<i>Focuses on less-expirienced web developers, allowing then to build professional websites through high abstraction
+without being dependant from expensive providers like WP, Joomla, ... - but the framework will also have a lot to offer
+for professional developers as well.</i>
 
 <strong>100% state of the art:</strong>
 - composer-ready
 - support for modules
 - DBAL: database/"filebase" support
-- custom cache system
+- custom psr4 cache system
 - custom, highly flexible model (wip!) and controller system
-- support for components
+- support for custom components
 - complies with common development patterns
-- support for most widget structures
+- support for common widget structures
 - multilanguage support
 - huge backend (DBMS, CMS, ...) - it even enables development of new controllers and templates!
-- fully scalable (from small homepages up to large enterprise websites or complex webapplications)
-- comes with default themes, but supports development of own themes as well
+- fully scalable (from small homepages up to large enterprise websites or complex web applications)
+- comes with default themes (classic/modern), but supports development of own themes as well
 - debug mode
 - custom request handling
-- differs between local and live enviroments and more - no need for docker anymore!
+- differs between local, stage and live environments - no need for docker containers anymore!
 - many many more...
 
 
 This project is currently under development.
-Since the core features are mostly done, it MIGHT be used to build webapplications already,
+Since the core features are mostly done, it <i>might</i> be used to build web applications already,
 but it's highly recommend to wait until official release of v1.0!
 
-<strong>//Edit: Due to the whole rebuild of the model system (mixin of active record pattern), absolutely don't use the current build !!!</strong>
-
-
-Planned release of v1.0 -> June/July 2022
-Be prepared :)
+<strong>//Edit: Due to the current WIP of the model system overhaul (mixin of active record pattern),
+usage of the current build is strongly discouraged!</strong>
