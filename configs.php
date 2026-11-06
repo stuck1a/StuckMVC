@@ -1,230 +1,121 @@
 <?php
 /*
- * This file is part of StuckMVC <https://stuck1a.de>,
- * Copyright (c) 2021.
- * StucksSeiten uses the StuckMVC framework, which is free software: you can
- * redistribute it and/or modify it under the terms of the GNU General Public
- * License version 3 as published by the Free Software Foundation.
+ *  This file is part of StuckMVC <https://stuck1a.de/coding/stuckmvc>,
+ *  Copyright (c) 2021-2026.
+ *  The StuckMVC framework is free software: you can redistribute it and/or modify it
+ *  under the terms of the GNU General Public License version 3 as published by
+ *  the Free Software Foundation. See the GNU General Public License for more details.
  *
- * StucksSeiten is the official website of the StuckMVC framework and further
- * designed as an usage example. It is distributed in the hope that it will be useful,
- * but without any warranty; without even the implied warranty of merchantability
- * of fitness for a particular purpose. See the GNU General Public License for more
- * details.
- *
- * You should have received a copy of the GNU General Public License along with
- * StuckMVC. If not, see <https://www.gnu.org/licenses/>. 
- *
- * FOR A SOMEWHAT FREER WORLD.
+ *  FOR A SOMEWHAT FREER WORLD.
  */
 
 /*************************************************************************************/
-/*  Following configs will be send to the Config class while bootstrapping.          */
-/*  Generally, none of the following values HAVE TO be adjusted, but most CAN be     */
-/*  adjusted, though. It's highly recommend to use the backend to adjust settings,   */
-/*  to prevent invalid changes which may break the application. However, experienced */
-/*  programmers may do the changes here as well. Make sure never to change any keys  */
-/*  of already existing settings, because the framework relies on them!              */
-/*  Also note the corresponding comment before changing any value.                   */
+/*  Default configuration of the application.                                        */
+/*                                                                                   */
+/*  NEVER put credentials or other secrets in here - this file is under version      */
+/*  control. Installation-specific values (database credentials, debug mode, ...)    */
+/*  belong into 'configs.local.php', which overrides any value of this file.         */
+/*  Copy 'configs.local.example.php' to 'configs.local.php' to get started.          */
+/*                                                                                   */
+/*  All paths are relative to the document root of the application.                  */
 /*************************************************************************************/
 
 return [
-  /* 
-   * SECTION 'project' - settings for class Config
-   */
-  'project' => [
-    /* name of your projects root directory and with that of your whole application */
-    'name' => 'StucksSeiten',
+    'application' => [
+        // Shows error details in the browser and turns PHP warnings into exceptions. NEVER enable on live systems!
+        'debug'     => false,
+        // Identifier of the active theme (letters, digits, '_' and '-'). Replaces the tag <themename> in paths.
+        'theme'     => 'classic',
+        // URL path of the application if it doesn't run in the document root of the domain, e.g. '/myapp'.
+        // null = detect automatically.
+        'base_path' => null,
+        // Public address used for links in e-mails (never taken from the request, which could be forged).
+        'url'       => 'http://localhost:8000',
+        // Root namespace of the application classes (controllers, models, widgets).
+        'namespace' => 'Stuck1A\\StuckMVC\\Application',
+    ],
 
-    /*
-     * This framework is able to run even without a real database by repurposing the text files that would otherwise
-     * cache database contents (one file per table). However, this fallback feature should only be used when there is
-     * absolutely no way to use a real database, since this will heavily slow down the application.
-     * In addition, the risk of data loss is much greater without database, as all data will be irretrievably lost if
-     * the repurposed text files are deleted.
-     * Further information on this function can be found in the documentation.
-     */
-    'useDatabase' => true,
+    'features' => [
+        // Feature flags of the application. Routes can be tied to them (see 'routing.feature_routes').
+        // Administrators may override them in the backend (stored in 'paths.settings').
+    ],
 
-    /*
-     * Globally enables or disables caching features. Caching will immensely reduce loading time, so you should only
-     * disable it for development/debugging purposes. If you use the filebase mode, you MUST enable caching.
-     */
-    'useCaching' => true,
-    
+    'cache' => [
+        // Caches the routing table and similar data. Invalidates itself when files change.
+        'enabled' => true,
+    ],
+
     'logging' => [
-      /*
-       * Path to the frameworks log file relative from doc root. If you change it, make sure to adjust corresponding
-       * ruleset in the root htaccess as well, otherwise the log file may be accessible for others.
-       */
-      'filepath' => 'logs.log',
-
-      /*
-       * TODO: Currently unused, also never read-in yet
-       */
-      'logWarnings' => true,
-      
-      /*
-       * Sets the servers php config "error_reporting" to the specified value.
-       * Note that this is not the logging level from the framework itself. but from the language its written itself.
-       * Only takes effect if the frameworks error handling fails due to malconfigured framework or incorrect usage and
-       * will print error messages to the browser output. This may contain sensitive data as well, therefore, it's highly
-       * advisable never to use values other than 0 in live systems unless you really know what you are doing.
-       *   Common values are:
-       *   E_ALL     -> report everything
-       *   E_ERROR   -> report fatal errors like uncaught exceptions which aborted execution
-       *   E_STRICT  -> report non-fatal but unfavourable like accessing undefined array keys/uninitialized variables or constants, ...)
-       *   E_PARSE   -> report non-fatal errors generated by parser
-       *   E_WARNING -> report warnings like use of deprecated functions
-       *   E_NOTICE  -> report notices - "may be" errors like potential uninitialized variables or variable name misspellings
-       *   0         -> report nothing
-       *
-       *   Combinations are possible, too:
-       *   E_ERROR | E_WARNING | E_PARSE  -> report non-fatal runtime errors
-       *   E_ALL & ~E_NOTICE              -> report everything except notices
-       */
-      'php_error_reporting' => 0,
-    ],
-    
-  ],
-
-  /*
-   * SECTION 'database' - settings for class DatabaseProvider
-   * Contains credentials and details needed to establish a proper database connection. It's
-   * possible to use different databases for development and live environments.
-   * If you have disabled database usage in section project, the following settings are ignored.
-   */
-  'database' => [
-    /*
-     * Connection details used when running on a remote host (usually the live system)
-     */
-    'web' => [
-      /*
-       * Name or IP of the database server.
-       */
-      'host' => '<webdbhost>',
-      /*
-       * The port which shall be used for the database connection.
-       * In most cases the default port 3306 don't need to be changed,
-       * but if so, you can adjust it here.
-       */
-      'port' => 3306,
-      /*
-       * Name of the database provided for this application.
-       * It's highly recommend to create a database which is only used for this application,
-       * since shared databases may lead to countless problems.
-       */
-      'name' => '<webdbname>',
-      /*
-       *  Name of the database user.
-       *  For security reasons, it's highly recommend to create an separate database user,
-       *  which has only rights for the application's database (offer all rights except 'grant').
-       */
-      'user' => '<webdbuser>',
-      /*
-       * Password for the database user.
-       * Should be at least 12 characters long and contain upper and lowercase letters, numbers and special characters
-       * to resist common brute force attacks.
-       */
-      'pass' => '<webdbpass>',
-      /*
-       * Used encoding when read or write the database.
-       * Should match with the encoding the database uses.
-       */
-      'encoding' => 'utf8mb4',
+        // Log file (null = PHP's native error log). Located in tmp/, which is not accessible from the web.
+        'file'        => 'tmp/logs/app.log',
+        // Minimum level of logged messages: debug, info, notice, warning, error, critical, alert, emergency
+        'level'       => 'notice',
+        'date_format' => 'd.m.Y H:i:s',
     ],
 
-    /*
-     * If you want to use another database (e.g. a local XAMPP database) if the application runs on localhost (what
-     * usually means the application runs in its development environment), you can specify different database details in
-     * this section. If you don't want to use this feature, just enter the same values like in the 'web' subsection.
-     * Also see 'web' for setting descriptions.
-     */
-    'local' => [
-      /*
-       * For a local host the following applies:
-       *   'host' => '127.0.0.1' for TCP/IP socket
-       *   'host' => 'localhost' for unix socket
-       */
-      'host' =>      '<localdbhost>',
-      'port' =>      3306,
-      'name' =>      '<localdbname>',
-      'user' =>      '<localdbuser>',
-      'pass' =>      '<localdbpass>',
-      'encoding' =>  'utf8mb4',
+    'database' => [
+        // PDO driver ('mysql' or 'sqlite')
+        'driver'  => 'mysql',
+        'host'    => '127.0.0.1',
+        'port'    => 3306,
+        // Optional UNIX socket path instead of host/port
+        'socket'  => null,
+        'name'    => '',
+        'user'    => '',
+        'pass'    => '',
+        'charset' => 'utf8mb4',
     ],
-    
-  ],
 
-  /*
-   * SECTION 'templates' - settings for class RendererFacade 
-   */
-  'templates' => [
-    /*
-     * Name for default template files.
-     * SEO routes that refer not to a TPL file but to a directory will try to use a template with the specified
-     * name from this directory.
-     */
-    'defaultName' => 'index.tpl',
-    /*
-     * Whether templates shall be recompiled with every request. Useful while developing templates,
-     * but significantly increases loading times so disable it if not necessary.
-     * May be turned on briefly if you can't enter the backend due to corrupted backend templates in cache.
-     */
-    'forceRecompile' => true,
-  ],
-
-  
-  /*
-   * SECTION 'mapping' - settings for class Mapper
-   * Following tags will be parsed while read-in:
-   *     <themename>  = identifier of the currently active theme (e.g. 'classic')
-   */
-  'mapping' => [
-    /*
-     * Preconfigured static SEO routes.
-     * Generally, the implemented SEO logic is based on slash-separated "steps".
-     * For a consistent structure and maximum clarity, it is advisable to mirror SEO routes in the structure of their
-     * corresponding content page directories. Autogenerated routes will do this, too. However, there is no technical
-     * necessity for it: the custom SEO entry '/foo/bar' => '/Category1/tpl/landingpage.tpl' would work, too.
-     * Calling its resulting SEO-URL "www.yourDomain.com/foo/bar" would attempt to render the file "tpl/landingpage.tpl"
-     * from the content page directory named "Category1", which itself must be located in any registered location for
-     * content pages directories (the one from the application itself or from any module).
-     * Note: Static routes will overwrite identical auto-generated routes!
-     */
-    'staticSeoRoutes' => [
-      '' => 'application/views/pages/home/index.tpl',         /* requests to domain root url */
-      'index' => 'application/views/pages/home/index.tpl',    /* common for start pages */
+    'session' => [
+        'name' => 'stuckmvc_sid',
     ],
-    
-    /*
-     * Directory mappings - if you really want to rename framework directories, you can do this here, but it's
-     * recommend to keep them as they are, since this hasn't any advantages except the personal preference.
-     */
-    'directories' => [
-      'controller' =>    'application/controller',                 /* application page controller dir */
-      'clAdmin' =>       'application/controller/admin',           /* application backend controller dir */
-      'models' =>        'application/models',                     /* application model dir */
-      'views' =>         'application/views',                      /* application themes base dir */
-      'viewsPages' =>    'application/views/pages',                /* application content pages base dir */
-      'viewsAdmin' =>    'application/views/admin',                /* application backend pages base dir */
-      'viewsTheme' =>    'application/views/<themename>',          /* application active theme base dir */
-      'widgets' =>       'application/widgets',                    /* application widgets base dir */
-      'plugins' =>       'core/plugins',                           /* framework Smarty plugins dir */
-      'downloads' =>     'out/downloads',                          /* downloadable files dir */
-      'img' =>           'out/img',                                /* images dir */
-      'css' =>           'out/src/<themename>/css',                /* stylesheets dir */
-      'cssLibs' =>       'out/src/<themename>/css/libs',           /* 3rd party stylesheets dir */
-      'js' =>            'out/src/<themename>/js',                 /* java scripts dir */
-      'jsLibs' =>        'out/src/<themename>/js/libs',            /* 3rd party java scripts dir */
-      'modules' =>       'modules',                                /* module base dir */
-      'cache' =>         'tmp',                                    /* cache system base dir */
-      'cacheComp' =>     'tmp/compiled',                           /* Smarty pre-compiled templates cache dir */
-      'cacheRend' =>     'tmp/rendered',                           /* Smarty pre-rendered templates cache dir */
-      'filebase' =>      'tmp/filebase',                           /* base location for the filebase mode */
-      'vendor' =>        'vendor',                                 /* composer packages dir */
-    ],                                                                                                                      
-    
-  ],
 
+    'auth' => [
+        // Class which loads user accounts for the login
+        'provider'             => 'Stuck1A\\StuckMVC\\Application\\Model\\UserProvider',
+        // Failed login attempts per username and IP before the login is blocked temporarily
+        'max_attempts'         => 5,
+        // Duration of the login block in seconds
+        'lockout_seconds'      => 900,
+        // Logged in users are logged out after this many seconds of inactivity (0 = never)
+        'idle_timeout'         => 7200,
+    ],
+
+    'templates' => [
+        // Name of default templates: routes pointing to a directory render this template of the directory.
+        'default_name'  => 'index.tpl',
+        // Recompile templates on every request. Only useful while developing Smarty plugins.
+        'force_compile' => false,
+    ],
+
+    'routing' => [
+        // Route prefixes controlled by a flag in 'features' (including their child routes), e.g. 'blog' => 'blog_enabled'.
+        'feature_routes' => [],
+        // Predefined routes which overwrite generated routes with the same path ('' is the start page).
+        'static_routes' => [
+            ''      => 'application/views/pages/home/index.tpl',
+            'index' => 'application/views/pages/home/index.tpl',
+        ],
+        // Optional SEO data per route. By default the title is taken from the {block 'title'} of the template.
+        'pages' => [
+            '' => ['description' => 'Welcome to StuckMVC.'],
+        ],
+    ],
+
+    'paths' => [
+        'pages'       => 'application/views/pages',             // content pages (become routes automatically)
+        'admin'       => 'application/views/admin',             // backend pages (routes below 'admin/')
+        'views'       => 'application/views',                   // template base directory
+        'theme'       => 'application/views/<themename>',       // templates of the active theme
+        'controllers' => 'application/Controller',              // page and backend controllers
+        'widgets'     => 'application/Widget',                  // widgets
+        'downloads'   => 'out/downloads',                       // downloadable files
+        'img'         => 'out/img',                             // images
+        'css'         => 'out/src/<themename>/css',             // stylesheets
+        'js'          => 'out/src/<themename>/js',              // scripts
+        'cache'       => 'tmp/cache',                           // file cache
+        'compiled'    => 'tmp/compiled',                        // compiled Smarty templates
+        'rendered'    => 'tmp/rendered',                        // Smarty output cache
+        'settings'    => 'tmp/settings/site.json',              // persistent admin settings (never clear with cache)
+    ],
 ];

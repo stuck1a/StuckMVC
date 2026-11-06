@@ -1,0 +1,18 @@
+# installation specific configuration (credentials!)
+/configs.local.php
+
+# composer packages - install them with 'composer install'
+/vendor/
+
+# runtime data (cache, compiled templates, logs, sessions) - but keep the access protection
+/tmp/*
+!/tmp/.htaccess
+
+# test artifacts
+/.phpunit.cache/
+/.phpunit.result.cache
+
+# IDE settings
+/.idea/
+
+*.log

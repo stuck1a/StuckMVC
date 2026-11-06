@@ -1,19 +1,48 @@
 {
-  "name":                "stuck1a/stuckmvc",
-  "description":         "Lightweight MVC framework",
-  "minimum-stability":   "stable",
-  "license":             "proprietary",
-  
+  "name": "stuck1a/stucksseiten",
+  "description": "Lightweight MVC framework with Smarty templates",
+  "type": "project",
+  "license": "proprietary",
+  "minimum-stability": "stable",
   "authors": [
     {
-      "name":  "stuck1a",
+      "name": "stuck1a",
       "email": "dev@stuck1a.de",
+      "homepage": "https://www.stuck1a.de"
     }
   ],
-  
   "require": {
-    "php": ">=7.1",
-    "smarty/smarty": "^3.1.40"
+    "php": ">=8.2",
+    "ext-pdo": "*",
+    "ext-mbstring": "*",
+    "smarty/smarty": "^5.8",
+    "psr/container": "^2.0",
+    "psr/log": "^3.0",
+    "psr/simple-cache": "^3.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^11.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "Stuck1A\\StuckMVC\\Core\\": "core/",
+      "Stuck1A\\StuckMVC\\Application\\": "application/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Stuck1A\\StuckMVC\\Tests\\": "tests/"
+    }
+  },
+  "config": {
+    "platform": {
+      "php": "8.2.0"
+    },
+    "optimize-autoloader": true,
+    "preferred-install": "dist",
+    "sort-packages": true
+  },
+  "scripts": {
+    "test": "phpunit"
   }
-  
 }
