@@ -1,27 +1,3 @@
-{*
- * This file is part of StucksSeiten <https://stuck1a.de>,
- * Copyright (c) 2021.
- * StucksSeiten uses the StuckMVC framework, which is free software: you can
- * redistribute it and/or modify it under the terms of the GNU General Public
- * License version 3 as published by the Free Software Foundation.
- * 
- * StucksSeiten is the official website of the StuckMVC framework and further
- * designed as an usage example. It is distributed in the hope that it will be useful,
- * but without any warranty; without even the implied warranty of merchantability
- * of fitness for a particular purpose. See the GNU General Public License for more
- * details.
- * 
- * You should have received a copy of the GNU General Public License along with
- * StucksSeiten. If not, see <https://www.gnu.org/licenses/>. 
- * 
- * FOR A SOMEWHAT FREER WORLD. 
- *}
-
-{extends 'file:layout/main.tpl'}
-
-{block 'title'}Unbekannter Fehler{/block}
-
-{block 'content'}
-  <h1>Unbekannter Fehler</h1>
-  <p>Ein allgemeiner Fehler ist aufgetreten.</p>
-{/block}
+{extends 'layout/main.tpl'}
+{block 'title'}Unknown error{/block}
+{block 'content'}<section><h1>{$status} – Something went wrong</h1><p>The request could not be processed. Please try again later.</p><a href="{url}">Back to the start page</a></section>{/block}

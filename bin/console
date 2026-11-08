@@ -1,0 +1,125 @@
+#!/usr/bin/env php
+<?php
+/*
+ *  This file is part of StuckMVC <https://stuck1a.de/coding/stuckmvc>,
+ *  Copyright (c) 2021-2026.
+ *  The StuckMVC framework is free software: you can redistribute it and/or modify it
+ *  under the terms of the GNU General Public License version 3 as published by
+ *  the Free Software Foundation. See the GNU General Public License for more details.
+ *
+ *  FOR A SOMEWHAT FREER WORLD.
+ */
+
+declare(strict_types=1);
+
+use Psr\SimpleCache\CacheInterface;
+use Stuck1A\StuckMVC\Application\Model\User;
+use Stuck1A\StuckMVC\Application\Setup\SchemaInstaller;
+use Stuck1A\StuckMVC\Core\Config\Config;
+use Stuck1A\StuckMVC\Core\Kernel;
+use Stuck1A\StuckMVC\Core\Routing\RouteCollection;
+use Stuck1A\StuckMVC\Core\View\View;
+
+if (PHP_SAPI !== 'cli') {
+    exit(1);
+}
+
+$root = dirname(__DIR__);
+require $root . '/vendor/autoload.php';
+
+$kernel = new Kernel($root, Config::load($root), ['SCRIPT_NAME' => '/index.php']);
+$container = $kernel->container();
+$command = $argv[1] ?? 'help';
+$args = array_slice($argv, 2);
+
+$readPassword = static function (string $prompt): string {
+    $fromEnv = getenv('STUCKMVC_PASSWORD');
+    if (is_string($fromEnv) && $fromEnv !== '') {
+        return $fromEnv;
+    }
+    fwrite(STDOUT, $prompt);
+    $tty = stream_isatty(STDIN);
+    if ($tty) {
+        shell_exec('stty -echo');
+    }
+    $password = rtrim((string) fgets(STDIN), "\r\n");
+    if ($tty) {
+        shell_exec('stty echo');
+        fwrite(STDOUT, PHP_EOL);
+    }
+    return $password;
+};
+
+try {
+    switch ($command) {
+        case 'cache:clear':
+            $container->get(CacheInterface::class)->clear();
+            $container->get(View::class)->smarty()->clearCompiledTemplate();
+            echo "Cache cleared.\n";
+            break;
+
+        case 'routes:list':
+            foreach ($container->get(RouteCollection::class) as $route) {
+                printf("%-24s %-8s %-28s %s\n", '/' . $route->path, $route->section, $route->title, $route->controller ?? '-');
+            }
+            break;
+
+        case 'db:install':
+            $container->get(SchemaInstaller::class)->install();
+            echo "Database schema installed.\n";
+            break;
+
+        case 'user:create':
+            $username = $args[0] ?? '';
+            $role = in_array('--admin', $args, true) ? User::ROLE_ADMIN : User::ROLE_USER;
+            $password = $readPassword('Password: ');
+            $errors = User::validate($username, $password, $password);
+            if ($errors !== []) {
+                fwrite(STDERR, implode(PHP_EOL, $errors) . PHP_EOL);
+                exit(1);
+            }
+            if (User::usernameExists($username)) {
+                fwrite(STDERR, "User '{$username}' already exists.\n");
+                exit(1);
+            }
+            User::register($username, $password, null, $role)->save();
+            echo "User '{$username}' ({$role}) created.\n";
+            break;
+
+        case 'user:password':
+            $user = User::findBy(['username' => $args[0] ?? '']);
+            if ($user === null) {
+                fwrite(STDERR, "Unknown user.\n");
+                exit(1);
+            }
+            $password = $readPassword('New password: ');
+            $errors = User::validate($user->getUsername(), $password, $password);
+            if ($errors !== []) {
+                fwrite(STDERR, implode(PHP_EOL, $errors) . PHP_EOL);
+                exit(1);
+            }
+            $user->setPassword($password);
+            $user->save();
+            echo "Password changed. Existing sessions of the user are logged out.\n";
+            break;
+
+        default:
+            echo <<<TXT
+                StuckMVC console
+
+                Usage: php bin/console <command> [arguments]
+
+                  cache:clear                     Clears the cache and the compiled templates
+                  routes:list                     Lists all routes
+                  db:install                      Creates the database tables
+                  user:create <name> [--admin]    Creates a user account (asks for the password)
+                  user:password <name>            Sets a new password for a user
+
+                The password can also be passed in the environment variable STUCKMVC_PASSWORD.
+
+                TXT;
+    }
+} catch (Throwable $e) {
+    fwrite(STDERR, get_class($e) . ': ' . $e->getMessage() . PHP_EOL);
+    exit(1);
+}
